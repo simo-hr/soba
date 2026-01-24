@@ -11,14 +11,12 @@ const articles = defineCollection({
 	// src/content/articles/ ディレクトリからMarkdown/MDXを読み込む
 	loader: glob({ base: './src/content/articles', pattern: '**/*.{md,mdx}' }),
 	// frontmatterのスキーマ定義
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
-		}),
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		pubDate: z.coerce.date(),
+		updatedDate: z.coerce.date().optional(),
+	}),
 });
 
 export const collections = { articles };
