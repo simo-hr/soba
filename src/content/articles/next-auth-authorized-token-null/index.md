@@ -5,14 +5,14 @@ pubDate: "2024-10-08"
 heroImage: "./images/social-media-card.png"
 ---
 
-### はじめに
+## はじめに
 
 next-authのjwtによる認証で、サインインは成功するのに**middlewareの処理でcookieに保存されているはずのtokenを取得するとnull**になるという現象で困っていた。
 
 issueを調べてみると同じようなことで困っている人がちらほらいたので、一瞬next-auth側を疑ったが、  
 クリティカルな内容にも関わらず未だに修正されていないのはおかしいと思い、もう少し自分を疑ってみることにした。
 
-### 原因
+## 原因
 
 **NextAuthOptionsでcookie名をカスタムしていた**ため、withAuth側でカスタムしたcookie名を指定する必要があった。
 

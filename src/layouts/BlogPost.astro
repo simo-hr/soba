@@ -34,6 +34,8 @@ const { title, description, pubDate, updatedDate } = Astro.props;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 2em !important;
+				line-height: 1.3;
 			}
 			.date {
 				margin-bottom: 0.5em;
@@ -41,6 +43,29 @@ const { title, description, pubDate, updatedDate } = Astro.props;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+
+			/* 記事本文内の見出しサイズ調整（h1: 2emに合わせたスケール） */
+			.prose h2 {
+				font-size: 1.5em !important;
+				margin-top: 2em;
+				margin-bottom: 0.75em;
+			}
+			.prose h3 {
+				font-size: 1.25em !important;
+				margin-top: 1.5em;
+				margin-bottom: 0.5em;
+			}
+			.prose h4 {
+				font-size: 1.1em !important;
+				margin-top: 1.25em;
+				margin-bottom: 0.5em;
+			}
+			.prose h5,
+			.prose h6 {
+				font-size: 1em !important;
+				margin-top: 1em;
+				margin-bottom: 0.5em;
 			}
 		</style>
 	</head>
