@@ -1,0 +1,25 @@
+# 旧WordPress URL → 新Astro URL (301リダイレクト)
+# フォーマット: 旧パス 新パス ステータスコード
+
+# 記事ページ
+/git-prune/ /articles/git-prune/ 301
+/nuxt-vitest/ /articles/nuxt-vitest/ 301
+/first-automated-test/ /articles/first-automated-test/ 301
+/vitest-mongodb/ /articles/vitest-mongodb/ 301
+/nuxt-path-alias/ /articles/nuxt-path-alias/ 301
+/programming-copy/ /articles/programming-copy/ 301
+/next-auth-authorized-token-null/ /articles/next-auth-authorized-token-null/ 301
+/github-actions-docker-build/ /articles/github-actions-docker-build/ 301
+
+# 末尾スラッシュなしバージョン
+/git-prune /articles/git-prune/ 301
+/nuxt-vitest /articles/nuxt-vitest/ 301
+/first-automated-test /articles/first-automated-test/ 301
+/vitest-mongodb /articles/vitest-mongodb/ 301
+/nuxt-path-alias /articles/nuxt-path-alias/ 301
+/programming-copy /articles/programming-copy/ 301
+/next-auth-authorized-token-null /articles/next-auth-authorized-token-null/ 301
+/github-actions-docker-build /articles/github-actions-docker-build/ 301
+
+# 旧 /blog/ パスからのリダイレクト
+/blog/* /articles/:splat 301
