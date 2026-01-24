@@ -1,6 +1,10 @@
 # 旧WordPress URL → 新Astro URL (301リダイレクト)
 # フォーマット: 旧パス 新パス ステータスコード
 
+# /articles へのアクセスは / にリダイレクト
+/articles / 301
+/articles/ / 301
+
 # 記事ページ
 /git-prune/ /articles/git-prune/ 301
 /nuxt-vitest/ /articles/nuxt-vitest/ 301
