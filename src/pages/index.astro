@@ -89,7 +89,7 @@ const posts = (await getCollection('articles')).sort(
 
 			.post-description {
 				font-size: 0.9rem;
-				color: rgb(var(--gray-dark));
+				color: #1C2024;
 				margin: 0;
 				line-height: 1.6;
 				display: -webkit-box;
@@ -112,7 +112,7 @@ const posts = (await getCollection('articles')).sort(
 	<body>
 		<Header />
 		<main>
-			<h1 class="page-title">記事一覧</h1>
+			<h1 class="page-title">Articles</h1>
 			<ul class="post-list">
 				{
 					posts.map((post) => (
