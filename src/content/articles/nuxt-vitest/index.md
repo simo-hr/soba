@@ -37,7 +37,7 @@ vitestでコードカバレッジを収集するためのプラグイン。
 
 ## テストの設定
 
-```
+```typescript
 import { defineVitestConfig } from 'nuxt-vitest/config'
 
 export default defineVitestConfig({

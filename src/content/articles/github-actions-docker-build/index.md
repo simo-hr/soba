@@ -31,7 +31,7 @@ GItHub Actionsで実行していたDockerイメージのビルド時間を高速
 
 ### 修正前のワークフロー
 
-```
+```yaml
 - name: Build Docker Image and Push Container
   run: |-
     docker build -t "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/docker/${{ env.SERVICE }}:${{ github.sha }}" -f ./Dockerfile .
@@ -44,7 +44,7 @@ dockerコマンドを利用してビルドとプッシュを行うシンプル�
 
 ### 修正後のワークフロー
 
-```
+```yaml
 - name: Set up Docker Buildx
   uses: docker/setup-buildx-action@v3
 
@@ -73,7 +73,7 @@ dockerコマンドを利用してビルドとプッシュを行うシンプル�
 
 #### **Docker Buildxのセットアップ**
 
-```
+```yaml
 - name: Set up Docker Buildx
   uses: docker/setup-buildx-action@v3
 ```
@@ -87,7 +87,7 @@ docker/setup-buildx-action は、GitHub Actions上でBuildxをセットアップ
 
 #### **メタデータの抽出**
 
-```
+```yaml
 - name: Extract metadata for Docker
   id: meta
   uses: docker/metadata-action@v5
@@ -102,7 +102,7 @@ docker/metadata-action は、**Dockerイメージのタグやラベルを自動�
 
 #### **Dockerイメージのビルドとプッシュ**
 
-```
+```yaml
 - name: Build Docker Image and Push Container
   uses: docker/build-push-action@v5
   with:
@@ -131,7 +131,7 @@ Buildxのキャッシュインポート/エクスポート機能を利用してD
 
 ### 修正前のDockerfile
 
-```
+```dockerfile
 FROM node:20-alpine AS base
 WORKDIR /app
 
@@ -149,7 +149,7 @@ CMD ["node","server.js"]
 
 ### 修正後のDockerfile
 
-```
+```dockerfile
 FROM node:20-alpine AS base
 
 FROM base AS deps

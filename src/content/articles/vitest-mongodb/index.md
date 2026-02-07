@@ -17,7 +17,7 @@ mongodb-memory-serverはNode.jsのテスト環境での使用を目的とした�
 
 globaSetupでMongoDBを起動するようにしておく。
 
-```
+```typescript
 import { MongoMemoryServer } from 'mongodb-memory-server'
 
 /**
@@ -38,7 +38,7 @@ teardownではmongoDBを停止する処理を行う。
 
 teardownと言う関数名でexportするとvitestがテスト終了時に実行してくれる。
 
-```
+```typescript
 /**
  * メモリ上で動いているMongoDBを停止する
  * 全てのテストが終了した後に１度だけ実行される
@@ -50,7 +50,7 @@ export async function teardown() {
 
 vitest.config.tsでそれぞれのファイルをglobalSetupに設定しておく。
 
-```
+```typescript
 export default defineConfig({
   test: {
     ...省略
@@ -61,7 +61,7 @@ mongoDBとの連携を関数化しておく。
 
 ここではmongooseを使用してmongoDBとの接続を行っている。
 
-```
+```typescript
 import mongoose from 'mongoose'
 
 /**
@@ -89,7 +89,7 @@ export const dbDisconnect = async () => {
 
 それぞれのテストから簡単に接続/切断できるようになった。
 
-```
+```typescript
   beforeAll(async () => {
     await dbConnect()
     // 後の処理

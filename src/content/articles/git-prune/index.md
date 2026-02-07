@@ -21,7 +21,7 @@ Gitの仕様として、ブランチがリモートリポジトリで削除さ�
 
 ## Git Pruneの使い方
 
-```
+```bash
 git fetch --prune
 ```
 
@@ -31,7 +31,7 @@ git fetch --prune
 
 ちなみに次のようなコマンドを実行すると、最新情報の取得は行わずに、ローカルにあるがリモートには存在しないブランチを削除する。
 
-```
+```bash
 git remote prune <remote>
 ```
 

@@ -18,7 +18,7 @@ issueを調べてみると同じようなことで困っている人がちらほ
 
 NextAuthOptionsは以下のように記述していた。
 
-```
+```typescript
 import { NextAuthOptions } from "next-auth"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -98,7 +98,7 @@ cookiesプロパティでsessionTokenのnameを`next-auth.session-token`カス�
 
 そのため、cookie名をカスタムした場合、**WithAuth側でもカスタムしたCookie名を指定してあげる**必要がある。
 
-```
+```typescript
 import { withAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
 
@@ -125,7 +125,7 @@ export default withAuth(
 
 　next-authの`NextAuthMiddlewareOptions` のcookiesのコードを確認してみると、ちゃんと「トークンがデフォルトのクッキー以外に格納されている場合に便利です。」という風に書いている。（便利というかそうしないとうまく動かないのだが。）
 
-```
+```typescript
 
   /**
    * You can override the default cookie names and options for any of the cookies
@@ -151,7 +151,7 @@ export default withAuth(
 
 NextAuthOptionsの方のcookiesのコードの方も確認してみると、「上級者向けのオプションなので、よく理解している場合のみ使用してね」というようなことが書いてある。
 
-```
+```typescript
   /**
    * You can override the default cookie names and options for any of the cookies used by NextAuth.js.
    * You can specify one or more cookies with custom properties,

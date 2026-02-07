@@ -9,7 +9,7 @@ heroImage: "./images/download-e1686469775202.png"
 
 nuxt3プロジェクトのnuxt.config.tsでhooksを設定するために、hooksを定義したモジュールをimportとしようと以下のように記述したところエラーが出た。
 
-```
+```typescript
 import hooks from '~/server/hooks'
 
 export default defineNuxtConfig({
@@ -18,9 +18,9 @@ export default defineNuxtConfig({
 })
 ```
 
-```
+```bash
 $ yarn build
- ERROR  Cannot find module '~/server/hooks' 
+ ERROR  Cannot find module '~/server/hooks'
 ```
 
 モジュールがありませんよと怒られたので、試しに相対パスを使って`import hooks from './server/hooks'` と記述するとエラーは起きなかった。

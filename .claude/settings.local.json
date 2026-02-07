@@ -1,9 +1,10 @@
 {
-  "outputStyle": "Learning",
-  "spinnerTipsEnabled": true,
   "permissions": {
     "allow": [
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.astro.build)"
     ]
-  }
+  },
+  "outputStyle": "Learning",
+  "spinnerTipsEnabled": true
 }
