@@ -72,7 +72,12 @@ const posts = (await getCollection('articles')).sort(
 				margin: 0 0 0.5rem 0;
 				color: rgb(var(--black));
 				line-height: 1.4;
-				transition: color 0.2s ease;
+			}
+
+			@media (prefers-reduced-motion: no-preference) {
+				.post-title {
+					transition: color 0.2s ease;
+				}
 			}
 
 			.post-meta {
@@ -120,7 +125,7 @@ const posts = (await getCollection('articles')).sort(
 							<a href={`/articles/${post.id}/`} class="post-link">
 								<h2 class="post-title">{post.data.title}</h2>
 								<div class="post-meta">
-									<time class="post-date">
+									<time class="post-date" datetime={post.data.pubDate.toISOString()}>
 										<FormattedDate date={post.data.pubDate} />
 									</time>
 								</div>

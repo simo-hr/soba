@@ -1,0 +1,9 @@
+{
+  "outputStyle": "Learning",
+  "spinnerTipsEnabled": true,
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  }
+}
