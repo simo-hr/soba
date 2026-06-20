@@ -4,17 +4,37 @@
  *
  * @overview 自己紹介ページ
  */
-import Layout from '../layouts/BlogPost.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<Layout
-	title="About"
-	description="simoの自己紹介"
-	pubDate={new Date('2023-05-01')}
->
-	<h2>simo</h2>
-	<p>ソフトウェアエンジニア</p>
+<BaseLayout title="About" description="simoの自己紹介">
+	<style slot="head">
+		main {
+			width: calc(100% - 2em);
+			max-width: 100%;
+			margin: 0;
+		}
+		.prose {
+			width: 800px;
+			max-width: calc(100% - 2em);
+			margin: auto;
+			padding: 1em;
+			color: rgb(var(--gray-dark));
+		}
+		.prose h2 {
+			font-size: 1.5em;
+			margin-top: 2em;
+			margin-bottom: 0.75em;
+		}
+	</style>
 
-	<h2>好きなもの</h2>
-	<p>キーボード / バスケ / 爬虫類 / フクロモモンガ / RPG / 龍が如く / ポケモン / ピクミン</p>
-</Layout>
+	<main>
+		<div class="prose">
+			<h2>simo</h2>
+			<p>ソフトウェアエンジニア</p>
+
+			<h2>好きなもの</h2>
+			<p>キーボード / バスケ / 爬虫類 / フクロモモンガ / RPG / 龍が如く / ポケモン / ピクミン</p>
+		</div>
+	</main>
+</BaseLayout>
