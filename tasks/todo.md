@@ -112,3 +112,115 @@ npm run build && diff -r /tmp/dist-before dist
 - 当初依頼の「`/goal` で Sonnet に並列実装」は、`/goal` の仕様（セッションを完了条件まで走らせる
   ラッパーで、ファイル/モデル指定・並列分配の機能はない）と、T1・T2 が `BlogPost.astro` を
   共有し並列化できない事情から、**直列・単一セッションで実装**した（ユーザー承認済み）。
+
+---
+
+# Google タグ (GA4) 設定
+
+作成日: 2026-07-25
+測定ID: `G-G5VSGG2XW8`
+
+## 方針（ユーザー確認済み）
+
+| 論点 | 決定 |
+| --- | --- |
+| タグ種別 | GA4 (gtag.js) を直接設置。GTM は経由しない |
+| 測定IDの置き場所 | `src/consts.ts` に直書き（HTMLに露出する公開情報なので秘匿不要） |
+| 計測範囲 | 本番ビルドのみ（`import.meta.env.PROD`）。dev サーバーのアクセスは計測しない |
+
+## 事前検証で判明したこと
+
+一時ページをビルドして `dist/` の出力を確認した結果、Astro の `<script>` は素通しされない。
+
+```html
+<!-- 書いたもの（ディレクティブなし） -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('config', 'G-TEST12345');
+</script>
+
+<!-- 出力されたもの -->
+<script type="module">window.dataLayer=window.dataLayer||[];function a(){dataLayer.push(arguments)}a("config","G-TEST12345");</script>
+```
+
+1. `type="module"` が付与される → モジュールスコープになり `gtag` がグローバルに露出しない
+2. minify で識別子が `gtag` → `a` にリネームされる → 名前で解決する GA4 の契約が壊れる
+
+いずれもエラーを出さずに沈黙するため、`is:inline` 相当の抑止が必須。
+ただし `is:inline` の中ではテンプレート式が評価されないため、測定IDの注入には
+`define:vars`（`is:inline` を含意する）を使う。
+
+## タスク
+
+- [x] **G1** `src/consts.ts` に `GA_MEASUREMENT_ID` を追加
+- [x] **G2** `src/components/GoogleAnalytics.astro` を新規作成（本番判定 + `is:inline` / `set:html`）
+- [x] **G3** `src/components/BaseHead.astro` から呼び出す
+- [x] **G4** 検証
+
+## 検証方法
+
+```bash
+npm run build              # 12ページがビルドできること
+npm run astro -- check     # 型エラーが無いこと
+```
+
+生成物で以下を確認する。
+
+- `dist/index.html` / `dist/about/index.html` / `dist/articles/*/index.html` の全HTMLにタグが出ていること
+- 初期化スクリプトに `type="module"` が**付いていない**こと
+- 関数名が `gtag` のまま残っていること（`function a(` になっていないこと）
+- `dist/rss.xml` / `dist/sitemap-index.xml` は不変であること
+- dev サーバー（`npm run dev`）ではタグが出力されないこと
+
+## レビュー
+
+実装日: 2026-07-25 / 全タスク完了。
+
+### 成果物
+
+- **新規**: `src/components/GoogleAnalytics.astro`
+- **変更**: `src/consts.ts`（`GA_MEASUREMENT_ID` 追加）/ `src/components/BaseHead.astro`（import + 1行の呼び出し）
+
+`BaseHead` は全ページが `BaseLayout` 経由で必ず通る唯一の `<head>` 構築点なので、
+呼び出しは1箇所で全11ページに行き渡る。
+
+### 途中で方針を1度変えた（define:vars → is:inline + set:html）
+
+当初 `define:vars` で測定IDを注入する実装にしたが、生成物を見て破棄した。
+`define:vars` は**スクリプト全体を IIFE で包む**（注入した `const` がグローバルを汚さないための設計）。
+
+```js
+<script>(function(){const gaMeasurementId = "G-G5VSGG2XW8";
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }   // ← IIFE のローカルに閉じる
+  ...
+})();</script>
+```
+
+`window.dataLayer` は明示代入なので**ページビュー計測だけは動いてしまう**が、
+`window.gtag` が存在しないため、後からカスタムイベントを送る段になって初めて壊れる。
+最終的に `is:inline` + `set:html`（スニペットをフロントマターで文字列組み立て）に変更した。
+
+### 検証（すべて green）
+
+- `npm run build`: 11 ページ成功
+- `npm run astro -- check`: **0 errors / 0 warnings**（1 hint は既存の JSON-LD、未変更）
+- 生成物 11 HTML すべてで以下を機械的に確認
+  - `gtag/js?id=G-G5VSGG2XW8` の読み込みと `gtag('config', ...)` の存在
+  - `function gtag(){dataLayer.push(arguments);}` が**リネームされずに残っている**
+  - 初期化スクリプトが `type="module"` でない / IIFE で包まれていない
+- `dist/rss.xml` / `dist/sitemap-index.xml`: `gtag` の混入 0 件
+- dev サーバー: HTML コメント `<!-- Google タグ (gtag.js) -->` のみで**スクリプト本体は非出力**
+
+### 型チェック上の補足
+
+`GA_MEASUREMENT_ID` には `: string` の型注釈を付けている。
+注釈が無いと TypeScript がリテラル型 `'G-G5VSGG2XW8'` に推論し、
+無効化用の `!== ''` 判定が「重なりの無い比較」として ts(2367) エラーになるため。
+
+### 申し送り
+
+- 実際にヒットが記録されるかは**本番デプロイ後に GA4 のリアルタイムレポート**で確認する。
+  ローカルで見るなら `npm run build && npm run preview`（`npm run dev` では出力されない）。
+- タグを一時的に止めたい場合は `GA_MEASUREMENT_ID` を空文字にすればコンポーネントごと出力されない。
