@@ -1,0 +1,38 @@
+---
+/**
+ * Google タグ (gtag.js)
+ *
+ * @overview GA4 の測定タグを <head> に出力する
+ * @specifications
+ * - 本番ビルド時のみ出力する（開発サーバーのアクセスを計測対象から外すため）
+ * - GA4 のスニペットは「グローバル関数 gtag が存在すること」を前提とするため、
+ *   Astro による加工を完全に抑止する必要がある。検証で確認した挙動は次のとおり:
+ *   - ディレクティブ無し → type="module" 化 + minify で gtag が a にリネームされる
+ *   - define:vars       → (function(){...})() で包まれ gtag がグローバルに出ない
+ *   よって is:inline で原文出力する。ただし is:inline の中身はテンプレート式が
+ *   評価されないため、測定IDを含むスニペットは文字列として組み立て set:html で渡す
+ * @limitations 測定IDが未設定（空文字）の場合は何も出力しない
+ */
+import { GA_MEASUREMENT_ID } from '../consts';
+
+const enabled = import.meta.env.PROD && GA_MEASUREMENT_ID !== '';
+
+/** gtag.js の初期化スニペット（Google 提供のコードと同一内容） */
+const initScript = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}');`;
+---
+
+{
+	enabled && (
+		<Fragment>
+			<script
+				is:inline
+				async
+				src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+			/>
+			<script is:inline set:html={initScript} />
+		</Fragment>
+	)
+}
