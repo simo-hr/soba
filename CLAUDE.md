@@ -18,9 +18,23 @@ npm run build
 # ビルドしたサイトをローカルでプレビュー
 npm run preview
 
+# TypeScript型チェック（.astroファイルを含む）
+npm run astro -- check
+
 # Astro CLIコマンドを実行
 npm run astro -- [command]
 ```
+
+## デプロイ
+
+Cloudflare Workers（静的アセット配信）にデプロイ。`wrangler.jsonc` で設定済み。
+
+```bash
+# デプロイ（要: Wrangler CLI）
+npx wrangler deploy
+```
+
+`npm run build` で生成した `./dist/` ディレクトリを Cloudflare が配信する。
 
 ## コードベース構成
 
@@ -38,7 +52,7 @@ src/content/articles/
 
 - **スキーマ定義**: `src/content.config.ts` でzodスキーマを定義
 - **必須frontmatter**: `title`, `description`, `pubDate`
-- **オプション**: `updatedDate`, `heroImage`
+- **オプション**: `updatedDate`
 - **コレクション取得**: `getCollection('articles')` で全記事を取得
 - **記事ID**: ディレクトリ名がslugとして自動的に記事IDになる（例: `git-prune/` → `post.id = "git-prune"`）
 
@@ -79,7 +93,8 @@ src/content/articles/
 
 - グローバルスタイル: `src/styles/global.css`
 - コンポーネントスコープCSS: 各`.astro`ファイル内の`<style>`タグ
-- 記事本文の見出しサイズは `BlogPost.astro` で調整済み（h1: 2em, h2: 1.5em, h3: 1.25em, ...）
+- 記事本文の見出しサイズは `global.css` の要素セレクタ（`h1`〜`h6`）で定義（h1: 2em, h2: 1.5em, h3: 1.25em, ...）
+- 注意: Astroのスコープ付き`<style>`は`<slot />`経由で挿入されるMarkdownの要素には届かない（`data-astro-cid-*`属性が付かないため）。記事本文にスタイルを当てる場合は`is:global`が必要
 
 ## 記事作成ワークフロー
 
@@ -90,7 +105,7 @@ src/content/articles/
    title: "記事タイトル"
    description: "記事の説明"
    pubDate: "YYYY-MM-DD"
-   heroImage: "./images/image.png" # オプション
+   updatedDate: "YYYY-MM-DD" # オプション
    ---
    ```
 3. 本文を記述（Markdown/MDX）
